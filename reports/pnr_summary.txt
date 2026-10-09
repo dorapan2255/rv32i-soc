@@ -1,0 +1,19 @@
+RV32I Core Physical Design Summary
+===================================
+Scope: rv32i_core only (memories and SoC peripherals excluded)
+Tool/library: OpenROAD v2.0-17598-ga008522d8 / Nangate45
+
+Die size: 199.32 um x 199.32 um
+Core size: 179.17 um x 177.80 um
+Placed standard-cell area before optimization: 11254.46 um^2
+Final design area: 13624 um^2
+Final utilization: 43%
+CTS sinks / inserted clock buffers: 1024 / 137
+Routed wire length: 126387 um
+Vias: 53999
+Final detailed-route violations: 0
+Post-route setup / hold slack: +5.03 ns / +0.06 ns
+
+The flow does not include SRAM macros, I/O pads, a power-delivery network,
+antenna checks, LVS, or multi-corner signoff.
+

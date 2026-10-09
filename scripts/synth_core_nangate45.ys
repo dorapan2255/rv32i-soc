@@ -1,0 +1,35 @@
+# Nangate45 typical corner 标准单元库。
+read_liberty -lib platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+
+# 读取并检查 CPU 核心 RTL。
+read_verilog -sv rtl/cpu/pc.sv
+read_verilog -sv rtl/cpu/decoder.sv
+read_verilog -sv rtl/cpu/control_unit.sv
+read_verilog -sv rtl/cpu/reg_file.sv
+read_verilog -sv rtl/cpu/imm_gen.sv
+read_verilog -sv rtl/cpu/alu.sv
+read_verilog -sv rtl/cpu/branch_jump_unit.sv
+read_verilog -sv rtl/cpu/rv32i_core.sv
+hierarchy -check -top rv32i_core
+
+# synth 将 RTL 降低为门级网络；flatten 便于本阶段阅读统计和执行 STA。
+synth -top rv32i_core -flatten
+check -assert
+
+# 先映射触发器，再由 ABC 将组合逻辑映射到同一个 Liberty 库。
+dfflibmap -liberty platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+abc -liberty platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+clean -purge
+check -assert
+
+# 输出带标准单元面积的统计、门级 Verilog 网表及 JSON 网表。
+tee -o reports/rv32i_core_nangate45_stats.txt stat -liberty platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib -top rv32i_core
+write_verilog -noattr -noexpr -nodec reports/rv32i_core_nangate45.v
+write_json reports/rv32i_core_nangate45.json
+
+# 重新读取门级网表，确认交付文件可以独立解析并正确链接顶层。
+design -reset
+read_liberty -lib platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+read_verilog reports/rv32i_core_nangate45.v
+hierarchy -check -top rv32i_core
+check -assert

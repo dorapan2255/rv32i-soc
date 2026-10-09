@@ -1,0 +1,16 @@
+RV32I Core Timing Summary
+==========================
+Scope: rv32i_core only (memories and SoC peripherals excluded)
+Constraint: 100 MHz (10.00 ns period), typical corner
+
+Pre-layout STA (OpenSTA 2.6.0):
+  Worst setup slack: +4.208 ns
+  Total negative slack: 0 ns
+
+Post-route STA (OpenROAD v2.0-17598-ga008522d8):
+  Worst setup slack: +5.03 ns
+  Worst hold slack: +0.06 ns
+
+These results are from one educational typical-corner flow and are not
+multi-corner signoff timing.
+

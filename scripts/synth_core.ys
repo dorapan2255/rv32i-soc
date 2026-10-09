@@ -1,0 +1,40 @@
+# 读取 CPU core 所需的可综合 SystemVerilog RTL。
+read_verilog -sv rtl/cpu/pc.sv
+read_verilog -sv rtl/cpu/decoder.sv
+read_verilog -sv rtl/cpu/control_unit.sv
+read_verilog -sv rtl/cpu/reg_file.sv
+read_verilog -sv rtl/cpu/imm_gen.sv
+read_verilog -sv rtl/cpu/alu.sv
+read_verilog -sv rtl/cpu/branch_jump_unit.sv
+read_verilog -sv rtl/cpu/rv32i_core.sv
+
+# 确认层次完整，并将 rv32i_core 设为综合顶层。
+hierarchy -check -top rv32i_core
+check -assert
+
+# 将 always_comb/always_ff 等过程转换为 mux、触发器和逻辑网络。
+proc
+opt
+fsm
+opt
+memory
+opt
+check -assert
+
+# 展开算术等 RTL 级单元，再映射到 Yosys generic gates。
+techmap
+opt
+abc -g AND,OR,XOR,XNOR,NAND,NOR,MUX
+clean
+check -assert
+
+# 保存最终统计和可供后续检查的综合网表。
+tee -o reports/rv32i_core_stats.txt stat -top rv32i_core
+write_verilog -noattr reports/rv32i_core_synth.v
+write_json reports/rv32i_core_synth.json
+
+# 从磁盘重新读取最终网表，确认交付文件本身层次完整且没有未驱动网络。
+design -reset
+read_verilog reports/rv32i_core_synth.v
+hierarchy -check -top rv32i_core
+check -assert

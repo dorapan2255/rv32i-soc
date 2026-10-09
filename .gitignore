@@ -1,0 +1,24 @@
+# Simulation and software build products
+/build/
+/software/build/
+/software/*.hex
+*_sim
+*.vcd
+*.fst
+
+# Generated synthesis and physical-design data
+*.log
+*.json
+*.odb
+*.spef
+/results/
+/reports/*
+!/reports/synthesis_summary.txt
+!/reports/timing_summary.txt
+!/reports/pnr_summary.txt
+
+# Editor, OS, and downloaded-file metadata
+.vscode/
+*.Zone.Identifier
+*~
+.DS_Store

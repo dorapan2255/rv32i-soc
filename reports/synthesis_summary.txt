@@ -1,0 +1,13 @@
+RV32I Core Synthesis Summary
+============================
+Scope: rv32i_core only (memories and SoC peripherals excluded)
+Technology library: NangateOpenCellLibrary typical
+Tool: Yosys 0.33
+
+Nangate45 standard cells: 6186
+DFF_X1 cells: 1024
+Mapped cell area: 11254.46 um^2
+Structural netlist check: 0 problems
+
+Reproduce with: make timing
+
